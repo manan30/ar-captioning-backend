@@ -4,7 +4,7 @@
   "description": "Backend for the AR Captioning app",
   "main": "index.js",
   "scripts": {
-    "start": "npx nodemon index.js",
+    "start": "node index.js infiniteStream --help",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,7 +24,8 @@
   "dependencies": {
     "@google-cloud/speech": "3.6.0",
     "node-record-lpcm16": "1.0.1",
-    "sox": "0.1.0"
+    "sox": "0.1.0",
+    "yargs": "15.1.0"
   },
   "devDependencies": {
     "nodemon": "2.0.2"
