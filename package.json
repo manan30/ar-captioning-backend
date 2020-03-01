@@ -1,0 +1,32 @@
+{
+  "name": "ar-captioning-backend",
+  "version": "0.0.1",
+  "description": "Backend for the AR Captioning app",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manan30/ar-captioning-backend.git"
+  },
+  "keywords": [
+    "AR",
+    "Node"
+  ],
+  "author": "Manan Joshi <mananjoshi1995@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/manan30/ar-captioning-backend/issues"
+  },
+  "homepage": "https://github.com/manan30/ar-captioning-backend#readme",
+  "dependencies": {
+    "@google-cloud/speech": "3.6.0",
+    "node-record-lpcm16": "1.0.1",
+    "sox": "0.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "2.0.2"
+  }
+}
