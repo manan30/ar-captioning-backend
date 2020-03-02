@@ -23,7 +23,9 @@
   "homepage": "https://github.com/manan30/ar-captioning-backend#readme",
   "dependencies": {
     "@google-cloud/speech": "3.6.0",
+    "express": "4.17.1",
     "node-record-lpcm16": "1.0.1",
+    "socket.io": "2.3.0",
     "sox": "0.1.0",
     "yargs": "15.1.0"
   },

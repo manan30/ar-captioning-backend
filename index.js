@@ -12,6 +12,27 @@ function infiniteStream(
   // Imports the Google Cloud client library
   const speech = require('@google-cloud/speech');
 
+  //Require the express moule
+  const express = require('express');
+
+  //create a new express application
+  const app = express();
+
+  app.use(express.static(__dirname + '/node_modules'));
+  app.get('/', function(req, res, next) {
+    res.sendFile(__dirname + '/index.html');
+  });
+
+  //require the http module
+  const http = require('http').createServer(app);
+
+  // require the socket.io module
+  const io = require('socket.io');
+
+  const port = 1741;
+
+  const socket = io(http);
+
   // Creates a client
   const client = new speech.SpeechClient();
 
@@ -38,10 +59,27 @@ function infiniteStream(
   let newStream = true;
   let bridgingOffset = 0;
   let lastTranscriptWasFinal = false;
+  let socketSetup = false;
+
+  function setupSocket() {
+    if (!socketSetup) {
+      socket.on('connection', socket => {
+        console.log('connected');
+      });
+
+      http.listen(port, () => console.log(`Listening on ${port}`));
+
+      socketSetup = true;
+    }
+  }
 
   function startStream() {
+    // Setup socket
+    setupSocket();
+
     // Clear current audioInput
     audioInput = [];
+
     // Initiate (Reinitiate) a recognize stream
     recognizeStream = client
       .streamingRecognize(request)
@@ -78,6 +116,7 @@ function infiniteStream(
     if (stream.results[0].isFinal) {
       // TODO: Do all the changes below this
       // process.stdout.write(chalk.green(`${stdoutText}\n`));
+      socket.emit('message', { message: stdoutText });
 
       isFinalEndTime = resultEndTime;
       lastTranscriptWasFinal = true;
