@@ -115,7 +115,7 @@ function infiniteStream(
 
     if (stream.results[0].isFinal) {
       // TODO: Do all the changes below this
-      // process.stdout.write(chalk.green(`${stdoutText}\n`));
+      process.stdout.write(chalk.green(`${stdoutText}\n`));
       socket.emit('message', { message: stdoutText });
 
       isFinalEndTime = resultEndTime;
