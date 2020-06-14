@@ -1,3 +1,5 @@
+const port = 1741;
+
 function infiniteStream(
   encoding,
   sampleRateHertz,
@@ -28,8 +30,6 @@ function infiniteStream(
 
   // require the socket.io module
   const io = require('socket.io');
-
-  const port = 1741;
 
   const socket = io(http);
 
@@ -64,10 +64,10 @@ function infiniteStream(
   function setupSocket() {
     if (!socketSetup) {
       socket.on('connection', socket => {
-        console.log('connected');
+        console.log('Client Connected');
       });
 
-      http.listen(port, () => console.log(`Listening on ${port}`));
+      http.listen(port, () => console.log());
 
       socketSetup = true;
     }
@@ -115,7 +115,8 @@ function infiniteStream(
 
     if (stream.results[0].isFinal) {
       // TODO: Do all the changes below this
-      process.stdout.write(chalk.green(`${stdoutText}\n`));
+      process.stdout.write(chalk.green(`Transcribed text: ${stdoutText}\n`));
+      process.stdout.write(chalk.green('################################\n'));
       socket.emit('message', { message: stdoutText });
 
       isFinalEndTime = resultEndTime;
@@ -189,6 +190,9 @@ function infiniteStream(
     process.stdout.write(
       chalk.yellow(`${streamingLimit * restartCounter}: RESTARTING REQUEST\n`)
     );
+    process.stdout.write(
+      chalk.yellow(`-----------------------------------------------\n`)
+    );
 
     newStream = true;
 
@@ -210,20 +214,14 @@ function infiniteStream(
     })
     .pipe(audioInputStreamTransform);
 
-  console.log('');
-  console.log('Listening, press Ctrl+C to stop.');
-  console.log('');
-  console.log('End (ms)       Transcript Results/Status');
-  console.log('=========================================================');
-
   startStream();
 }
 
 require(`yargs`)
   .demandCommand(1)
   .command(
-    `infiniteStream`,
-    `infinitely streams audio input from microphone to speech API`,
+    `transcribe`,
+    `infinitely stream audio input from microphone to speech API`,
     {},
     opts =>
       infiniteStream(
@@ -263,10 +261,10 @@ require(`yargs`)
       type: 'number'
     }
   })
-  .example(`node $0 infiniteStream`)
+  .example(`node $0 transcribe`)
   .wrap(120)
   .recommendCommands()
   .help()
   .strict().argv;
 
-console.log('Listening, press Ctrl+C to stop.');
+console.log(`Listening on ${port}, press Ctrl+C to stop.`);
