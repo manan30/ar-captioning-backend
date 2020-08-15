@@ -1,4 +1,4 @@
-const port = 1741;
+const port = 2130;
 
 function infiniteStream(
   encoding,
@@ -21,7 +21,7 @@ function infiniteStream(
   const app = express();
 
   app.use(express.static(__dirname + '/node_modules'));
-  app.get('/', function(req, res, next) {
+  app.get('/', function (req, res, next) {
     res.sendFile(__dirname + '/index.html');
   });
 
@@ -44,9 +44,9 @@ function infiniteStream(
     config: {
       encoding: encoding,
       sampleRateHertz: sampleRateHertz,
-      languageCode: languageCode
+      languageCode: languageCode,
     },
-    interimResults: false // If you want interim results, set this to true
+    interimResults: false, // If you want interim results, set this to true
   };
 
   let recognizeStream = null;
@@ -63,7 +63,7 @@ function infiniteStream(
 
   function setupSocket() {
     if (!socketSetup) {
-      socket.on('connection', socket => {
+      socket.on('connection', (socket) => {
         console.log('Client Connected');
       });
 
@@ -83,7 +83,7 @@ function infiniteStream(
     // Initiate (Reinitiate) a recognize stream
     recognizeStream = client
       .streamingRecognize(request)
-      .on('error', err => {
+      .on('error', (err) => {
         if (err.code === 11) {
           // restartStream();
         } else {
@@ -96,7 +96,7 @@ function infiniteStream(
     setTimeout(restartStream, streamingLimit);
   }
 
-  const speechCallback = stream => {
+  const speechCallback = (stream) => {
     // Convert API result end time from seconds + nanoseconds to milliseconds
     resultEndTime =
       stream.results[0].resultEndTime.seconds * 1000 +
@@ -166,7 +166,7 @@ function infiniteStream(
       }
 
       callback();
-    }
+    },
   });
 
   function restartStream() {
@@ -206,10 +206,10 @@ function infiniteStream(
       threshold: 0, // Silence threshold
       silence: 1000,
       keepSilence: true,
-      recordProgram: 'rec' // Try also "arecord" or "sox"
+      recordProgram: 'rec', // Try also "arecord" or "sox"
     })
     .stream()
-    .on('error', err => {
+    .on('error', (err) => {
       console.error('Audio recording error ' + err);
     })
     .pipe(audioInputStreamTransform);
@@ -223,7 +223,7 @@ require(`yargs`)
     `transcribe`,
     `infinitely stream audio input from microphone to speech API`,
     {},
-    opts =>
+    (opts) =>
       infiniteStream(
         opts.encoding,
         opts.sampleRateHertz,
@@ -237,29 +237,29 @@ require(`yargs`)
       default: 'LINEAR16',
       global: true,
       requiresArg: true,
-      type: 'string'
+      type: 'string',
     },
     sampleRateHertz: {
       alias: 'r',
       default: 16000,
       global: true,
       requiresArg: true,
-      type: 'number'
+      type: 'number',
     },
     languageCode: {
       alias: 'l',
       default: 'en-US',
       global: true,
       requiresArg: true,
-      type: 'string'
+      type: 'string',
     },
     streamingLimit: {
       alias: 's',
       default: 10000,
       global: true,
       requiresArg: true,
-      type: 'number'
-    }
+      type: 'number',
+    },
   })
   .example(`node $0 transcribe`)
   .wrap(120)
